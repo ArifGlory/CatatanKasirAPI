@@ -63,6 +63,7 @@ class BarangController extends Controller
             'harga_jual' => 'required',
             'stok' => 'required',
             'deskripsi' => 'required',
+            'satuan' => 'required',
         ]);
         $request_data = $request->all();
         unset($request_data['token']);

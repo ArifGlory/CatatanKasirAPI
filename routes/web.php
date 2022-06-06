@@ -27,6 +27,9 @@ $router->get("/user", "UserController@index");
 $router->post("/user/update", "UserController@update");
 $router->get("/user/detail", "UserController@detail");
 
+$router->post("/barang/add", "BarangController@store");
+$router->get("/barang/data", "BarangController@anyData");
+
 
 $router->get("/santri-by-wali", "SantriController@anyData");
 $router->get("/santri/kitab", "SantriController@kitabSantri");

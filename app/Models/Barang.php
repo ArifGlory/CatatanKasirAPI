@@ -22,6 +22,7 @@ class Barang extends Model
         'stok',
         'deskripsi',
         'picture',
+        'satuan',
         'created_by',
         'created_at',
         'updated_at',
