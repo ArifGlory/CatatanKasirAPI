@@ -28,8 +28,13 @@ $router->post("/user/update", "UserController@update");
 $router->get("/user/detail", "UserController@detail");
 
 $router->post("/barang/add", "BarangController@store");
+$router->post("/barang/update", "BarangController@update");
 $router->get("/barang/data", "BarangController@anyData");
+$router->get("/barang/data/stok-tipis", "BarangController@dataMenipis");
 $router->get("/barang/delete", "BarangController@delete");
+
+$router->get("/pelanggan/data", "PelangganController@anyData");
+$router->post("/pelanggan/add", "PelangganController@store");
 
 
 $router->get("/santri-by-wali", "SantriController@anyData");

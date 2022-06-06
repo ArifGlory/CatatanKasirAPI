@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Barang;
+use App\Models\Pelanggan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class BarangController extends Controller
+class PelangganController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -30,22 +31,23 @@ class BarangController extends Controller
         $user = User::where('token',$request->input('token'))->first();
         $keyword = $request->input('search');
 
-        $barang = Barang::select('*')
+        $pelanggan = Pelanggan::select('*')
             ->where('created_by',$user->id)
             ->orderBy('id',"DESC")
             ->when($keyword != "", function ($query) use($keyword) {
                 return $query->where('name', 'LIKE', '%' . $keyword . '%');
             })->paginate(10);
 
-        $barang->makeHidden('created_at');
-        $barang->makeHidden('updated_at');
+        $pelanggan->makeHidden('created_at');
+        $pelanggan->makeHidden('updated_at');
+        $pelanggan->makeHidden('deleted_at');
         //dd($users);
 
-        if ($barang){
-            $res['message'] = 'Data barang berhasil didapatkan!';
+        if ($pelanggan){
+            $res['message'] = 'Data pelanggan berhasil didapatkan!';
             $res['http_status'] = 200;
             $res['status'] = "OK";
-            $res['data'] = $barang;
+            $res['data'] = $pelanggan;
 
         }else{
             $res['message'] = 'Tidak ada data';
@@ -55,66 +57,29 @@ class BarangController extends Controller
 
         }
 
-        return response()->json($barang, $res['http_status']);
+        return response()->json($pelanggan, $res['http_status']);
     }
 
-    public function dataMenipis(Request $request){
-        $user = User::where('token',$request->input('token'))->first();
-
-        $barang = Barang::select('*')
-            ->where('created_by',$user->id)
-            ->orderBy('stok',"ASC")
-            ->paginate(10);
-
-        $barang->makeHidden('created_at');
-        $barang->makeHidden('updated_at');
-        //dd($users);
-
-        if ($barang){
-            $res['message'] = 'Data barang berhasil didapatkan!';
-            $res['http_status'] = 200;
-            $res['status'] = "OK";
-            $res['data'] = $barang;
-
-        }else{
-            $res['message'] = 'Tidak ada data';
-            $res['http_status'] = 202;
-            $res['status'] = "Failed";
-            $res['data'] = [];
-
-        }
-
-        return response()->json($barang, $res['http_status']);
-    }
 
     public function store(Request $request){
         $user = User::where('token',$request->input('token'))->first();
 
         $this->validate($request, [
             'name' => 'required',
-            'harga_beli' => 'required',
-            'harga_jual' => 'required',
-            'stok' => 'required',
-            'deskripsi' => 'required',
-            'satuan' => 'required',
+            'phone' => 'required',
+            'alamat' => 'required',
         ]);
         $request_data = $request->all();
         unset($request_data['token']);
         $request_data['created_by'] = $user->id;
 
-        if ($request->hasFile('picture')) {
-            $image = $request->file('picture');
-            $photo = round(microtime(true) * 1000) . '.' . $image->getClientOriginalExtension();
-            $image->move('img/barang/', $photo);
-            $request_data['picture'] = $photo;
-        }
 
-        if (Barang::create($request_data)){
-            $res['message'] = 'Tambah barang berhasil!';
+        if (Pelanggan::create($request_data)){
+            $res['message'] = 'Tambah pelanggan berhasil!';
             $res['status'] = "OK";
             $res['http_status'] = 200;
         }else {
-            $res['message'] = 'Tambah barang gagal!';
+            $res['message'] = 'Tambah pelanggan gagal!';
             $res['status'] = "Failed";
             $res['http_status'] = 202;
         }
