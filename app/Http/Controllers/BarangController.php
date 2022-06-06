@@ -89,4 +89,22 @@ class BarangController extends Controller
         return response()->json($res, $res['http_status']);
     }
 
+    public function delete(Request $request){
+        //$user = User::where('token',$request->input('token'))->first();
+        $barang = Barang::findOrFail($request->input('id_barang'));
+
+        $delete = $barang->delete();
+        if ($delete){
+            $res['message'] = 'Hapus barang berhasil!';
+            $res['status'] = "OK";
+            $res['http_status'] = 200;
+        }else{
+            $res['message'] = 'Hapus barang gagal!';
+            $res['status'] = "Failed";
+            $res['http_status'] = 202;
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
 }
