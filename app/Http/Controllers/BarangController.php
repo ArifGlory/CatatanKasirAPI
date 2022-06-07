@@ -58,6 +58,31 @@ class BarangController extends Controller
         return response()->json($barang, $res['http_status']);
     }
 
+    public function getAllBarang(Request $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $barang = Barang::select('*')
+            ->where('created_by',$user->id)
+            ->get();
+        $barang->makeHidden('created_at');
+        $barang->makeHidden('updated_at');
+
+        if ($barang){
+            $res['message'] = 'Data barang berhasil didapatkan!';
+            $res['http_status'] = 200;
+            $res['status'] = "OK";
+            $res['data'] = $barang;
+
+        }else{
+            $res['message'] = 'Tidak ada data';
+            $res['http_status'] = 202;
+            $res['status'] = "Failed";
+            $res['data'] = [];
+
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
     public function dataMenipis(Request $request){
         $user = User::where('token',$request->input('token'))->first();
 

@@ -30,6 +30,7 @@ $router->get("/user/detail", "UserController@detail");
 $router->post("/barang/add", "BarangController@store");
 $router->post("/barang/update", "BarangController@update");
 $router->get("/barang/data", "BarangController@anyData");
+$router->get("/barang/data/all", "BarangController@getAllBarang");
 $router->get("/barang/data/stok-tipis", "BarangController@dataMenipis");
 $router->get("/barang/delete", "BarangController@delete");
 
