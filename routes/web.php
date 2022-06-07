@@ -35,6 +35,7 @@ $router->get("/barang/data/stok-tipis", "BarangController@dataMenipis");
 $router->get("/barang/delete", "BarangController@delete");
 
 $router->get("/pelanggan/data", "PelangganController@anyData");
+$router->get("/pelanggan/data/all", "PelangganController@getAllPelanggan");
 $router->post("/pelanggan/add", "PelangganController@store");
 
 

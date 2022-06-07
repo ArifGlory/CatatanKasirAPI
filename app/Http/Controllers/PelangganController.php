@@ -60,6 +60,31 @@ class PelangganController extends Controller
         return response()->json($pelanggan, $res['http_status']);
     }
 
+    public function getAllPelanggan(Request $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $pelanggan = Pelanggan::select('*')
+            ->where('created_by',$user->id)
+            ->get();
+        $pelanggan->makeHidden('created_at');
+        $pelanggan->makeHidden('updated_at');
+
+        if ($pelanggan){
+            $res['message'] = 'Data pelanggan berhasil didapatkan!';
+            $res['http_status'] = 200;
+            $res['status'] = "OK";
+            $res['data'] = $pelanggan;
+
+        }else{
+            $res['message'] = 'Tidak ada data';
+            $res['http_status'] = 202;
+            $res['status'] = "Failed";
+            $res['data'] = [];
+
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
 
     public function store(Request $request){
         $user = User::where('token',$request->input('token'))->first();
