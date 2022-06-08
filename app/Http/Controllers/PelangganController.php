@@ -36,7 +36,7 @@ class PelangganController extends Controller
             ->orderBy('id',"DESC")
             ->when($keyword != "", function ($query) use($keyword) {
                 return $query->where('name', 'LIKE', '%' . $keyword . '%');
-            })->paginate(10);
+            })->paginate(20);
 
         $pelanggan->makeHidden('created_at');
         $pelanggan->makeHidden('updated_at');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
 
-class Transaksi extends Model
+class TransaksiDetail extends Model
 {
 
     /**
@@ -20,6 +20,7 @@ class Transaksi extends Model
         'transaksi_id',
         'barang_id',
         'untung',
+        'subtotal',
         'created_at',
         'updated_at',
     ];

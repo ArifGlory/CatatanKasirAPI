@@ -38,11 +38,8 @@ $router->get("/pelanggan/data", "PelangganController@anyData");
 $router->get("/pelanggan/data/all", "PelangganController@getAllPelanggan");
 $router->post("/pelanggan/add", "PelangganController@store");
 
+$router->post("/transaksi/store", "TransaksiController@store");
+$router->get("/transaksi/history", "TransaksiController@history");
 
-$router->get("/santri-by-wali", "SantriController@anyData");
-$router->get("/santri/kitab", "SantriController@kitabSantri");
-$router->get("/santri/pelanggaran", "SantriController@pelanggaran");
-$router->get("/santri/prestasi", "SantriController@prestasi");
-$router->get("/santri/pembayaran", "SantriController@pembayaran");
-$router->get("/santri/jadwal", "SantriController@jadwal");
+
 
