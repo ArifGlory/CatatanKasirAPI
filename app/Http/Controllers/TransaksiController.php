@@ -7,6 +7,7 @@ use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -69,9 +70,16 @@ class TransaksiController extends Controller
 
     public function history(Request  $request){
         $user = User::where('token',$request->input('token'))->first();
-        $transaksi = Transaksi::join('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
+        //tap untuk menjaga paginationnya tetep ada, walau data nya ada yang diubah
+        $transaksi = tap(Transaksi::join('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
+            ->select('transaksi.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
             ->where('transaksi.user_id',$user->id)
-            ->paginate(20);
+            ->paginate(20))
+            ->map(function ($item){
+                $waktu_transaksi = Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at)->format('d F Y');
+                $item->tgl_transaksi = $waktu_transaksi;
+                return $item;
+            });
 
         if ($transaksi){
             $res['message'] = 'Data transaksi berhasil didapatkan!';
