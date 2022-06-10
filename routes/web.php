@@ -40,6 +40,10 @@ $router->post("/pelanggan/add", "PelangganController@store");
 
 $router->post("/transaksi/store", "TransaksiController@store");
 $router->get("/transaksi/history", "TransaksiController@history");
+$router->get("/transaksi/total-untung", "TransaksiController@totalUntung");
+
+$router->get("/hutang/data", "HutangController@anyData");
+$router->post("/hutang/add", "HutangController@store");
 
 
 

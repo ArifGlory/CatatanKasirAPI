@@ -71,7 +71,7 @@ class TransaksiController extends Controller
     public function history(Request  $request){
         $user = User::where('token',$request->input('token'))->first();
         //tap untuk menjaga paginationnya tetep ada, walau data nya ada yang diubah
-        $transaksi = tap(Transaksi::join('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
+        $transaksi = tap(Transaksi::leftJoin('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
             ->select('transaksi.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
             ->where('transaksi.user_id',$user->id)
             ->paginate(20))
@@ -95,6 +95,27 @@ class TransaksiController extends Controller
         }
 
         return response()->json($transaksi, $res['http_status']);
+    }
+
+    public function totalUntung(Request  $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $total_untung =  Transaksi::where('transaksi.user_id',$user->id)
+            ->sum('total_untung');
+
+        if ($total_untung){
+            $res['message'] = 'Data total untung berhasil didapatkan!';
+            $res['http_status'] = 200;
+            $res['status'] = "OK";
+            $res['data'] = $total_untung;
+        }else{
+            $res['message'] = 'Tidak ada data';
+            $res['http_status'] = 202;
+            $res['status'] = "Failed";
+            $res['data'] = [];
+
+        }
+
+        return response()->json($res, $res['http_status']);
     }
 
 
