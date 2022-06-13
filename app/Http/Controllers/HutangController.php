@@ -32,10 +32,16 @@ class HutangController extends Controller
 
     public function anyData(Request $request){
         $user = User::where('token',$request->input('token'))->first();
+        $tipe_hutang = $request->input('hutang_type');
+
         //tap untuk menjaga paginationnya tetep ada, walau data nya ada yang diubah
         $hutang = tap(Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
             ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
             ->where('hutang.user_id',$user->id)
+            //->where('hutang.hutang_type',"pelanggan")
+            ->when($tipe_hutang != "", function ($query) use($tipe_hutang) {
+                return $query->where('hutang.hutang_type', $tipe_hutang);
+            })
             ->paginate(20))
             ->map(function ($item){
                 $waktu_hutang = Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at)->format('d F Y');
@@ -59,6 +65,7 @@ class HutangController extends Controller
         return response()->json($hutang, $res['http_status']);
     }
 
+
     public function store(Request  $request){
         $user = User::where('token',$request->input('token'))->first();
         $requestData = $request->all();
@@ -67,6 +74,8 @@ class HutangController extends Controller
             'user_id'  => $user->id,
             'pelanggan_id'  => $requestData['id_pelanggan'],
             'pelanggan_type'  => $requestData['pelanggan_type'],
+            'hutang_type'  => $requestData['hutang_type'],
+            'deskripsi'  => $requestData['deskripsi'],
             'hutang'  => $requestData['hutang'],
         );
         $hutang = Hutang::create($data_hutang);

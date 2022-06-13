@@ -21,6 +21,8 @@ class Hutang extends Model
         'pelanggan_type',
         'hutang',
         'status',
+        'hutang_type',
+        'deskripsi',
         'created_at',
         'updated_at',
     ];
