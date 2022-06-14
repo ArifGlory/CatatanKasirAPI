@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
 
 class AuthController extends Controller
 {
@@ -16,6 +19,11 @@ class AuthController extends Controller
     public function __construct()
     {
         //
+    }
+
+    public function tesPDF(){
+
+        return view('mypdf');
     }
 
     public function register(Request $request)

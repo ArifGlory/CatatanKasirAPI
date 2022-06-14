@@ -93,5 +93,32 @@ class HutangController extends Controller
         return response()->json($hutang, $res['http_status']);
     }
 
+    public function update(Request $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $hutang = Hutang::findOrFail($request->input('id_hutang'));
+
+        $requestData = $request->all();
+        unset($requestData['token']);
+        unset($requestData['id_hutang']);
+
+        if ($hutang->update($requestData)){
+            $res['message'] = 'Update data hutang berhasil ';
+            $res['status'] = "OK";
+            $res['http_status'] = 200;
+        }else{
+            $res['message'] = 'Ubah data hutang, coba lagi nanti';
+            $res['status'] = "Failed";
+            $res['http_status'] = 202;
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
+    public function report(Request $request){
+        $user = User::where('token',$request->input('token'))->first();
+
+        return view('laporan_hutang',compact('user'));
+    }
+
 
 }

@@ -22,6 +22,7 @@ $router->post("/register", "AuthController@register");
 $router->post("/login", "AuthController@login");
 $router->post("/login-wali-santri", "AuthController@loginWaliSantri");
 $router->get("/logout", "AuthController@logout");
+$router->get("/tes-pdf", "AuthController@tesPDF");
 
 $router->get("/user", "UserController@index");
 $router->post("/user/update", "UserController@update");
@@ -45,7 +46,9 @@ $router->get("/transaksi/detail", "TransaksiController@detailTransaksi");
 $router->get("/transaksi/chart", "TransaksiController@chartData");
 
 $router->get("/hutang/data", "HutangController@anyData");
+$router->get("/hutang/report", "HutangController@report");
 $router->post("/hutang/add", "HutangController@store");
+$router->post("/hutang/update", "HutangController@update");
 
 
 
