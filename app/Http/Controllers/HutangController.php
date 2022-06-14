@@ -116,8 +116,20 @@ class HutangController extends Controller
 
     public function report(Request $request){
         $user = User::where('token',$request->input('token'))->first();
+        $from = $request->input('dari');
+        $until = $request->input('sampai');
 
-        return view('laporan_hutang',compact('user'));
+        $dari = Carbon::createFromFormat('Y-m-d',$from)->format('d F Y');
+        $sampai = Carbon::createFromFormat('Y-m-d',$until)->format('d F Y');
+
+        $hutang = Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
+            ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
+            ->where('hutang.user_id',$user->id)
+            ->where('hutang.created_at','>=',$from)
+            ->where('hutang.created_at','<=',$until)
+            ->get();
+
+        return view('laporan_hutang',compact('user','hutang','dari','sampai'));
     }
 
 

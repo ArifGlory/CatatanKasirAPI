@@ -103,8 +103,8 @@
             <h2 class="font-weight-bold">Laporan Hutang <?php echo $user->nama_umkm;?> </h2>
         </div>
         <div class="col-md-9">
-            <p>Data Tanggal - Tanggal : </p>
-            <p>Jumlah Data : </p>
+            <p>Data Tanggal <?php echo $dari; ?> s/d Tanggal <?php echo $sampai; ?> </p>
+            <p>Jumlah Data : <?php echo count($hutang); ?> </p>
         </div>
         <div class="bb-1 mt-1 w-100"></div>
         <div class="bb-3 mt-2 w-100"></div>
@@ -124,6 +124,23 @@
                     </tr>
                     </thead>
                     <tbody>
+                        <?php
+                        $no = 1;
+                        foreach ($hutang as $val) {
+                            $date = strtotime($val->created_at);
+                            $nama_pelanggan = $val->nama_pelanggan;
+                            if ($nama_pelanggan == "" || $nama_pelanggan == null){
+                                $nama_pelanggan = "Guest";
+                            }
+                            ?>
+                            <tr>
+                                <td> <?php echo $no++;?> </td>
+                                <td> <?php echo date('d F Y', $date);?> </td>
+                                <td> <?php echo $nama_pelanggan; ?> </td>
+                                <td>Rp. <?php echo number_format($val->hutang,0,',','.') ?> </td>
+                                <td> <?php echo $val->status; ?> </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
