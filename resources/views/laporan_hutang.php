@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:background-color="http://www.w3.org/1999/xhtml">
-<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Laporan Hutang <?php echo $user->nama_umkm;?> </title>
-    <script>
+    <!--<script>
         document.addEventListener('DOMContentLoaded', function(){
             // your code goes here
             window.print();
         }, false);
-    </script>
+    </script>-->
     <style type="text/css" media="all">
         hr {
             -moz-border-bottom-colors: none;
@@ -39,7 +40,7 @@
         }
         .border1 td{
             border:1px solid #000;
-            padding: 3px;
+            padding: 2px;
         }
         .border1 th{
             border:1px solid #000;
@@ -94,17 +95,32 @@
         .blink { text-decoration: blink; }
         .all   { text-decoration: underline overline line-through; }
         a      { text-decoration: none; }
+        .my-center {
+            text-align: center;
+        }
+        .no-margin-vertical{
+            margin-bottom: 0;
+            margin-top: 1;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-9 text-center">
-            <h2 class="font-weight-bold">Laporan Hutang <?php echo $user->nama_umkm;?> </h2>
+        <div class="col-md-10">
+            <h1 style="margin-bottom: 0px;"><?php echo $user->nama_umkm;?></h1>
+            <h3 style="margin-top: 1px;"><?php echo $user->phone;?></h3>
+        </div>
+        <div class="col-md-12">
+            <div class="text-center">
+                <h2 style="align-self: center;" class="my-center">Laporan Hutang </h2>
+            </div>
         </div>
         <div class="col-md-9">
-            <p>Data Tanggal <?php echo $dari; ?> s/d Tanggal <?php echo $sampai; ?> </p>
-            <p>Jumlah Data : <?php echo count($hutang); ?> </p>
+            <p class="no-margin-vertical">Laporan dibuat tanggal : <?php echo $now; ?> </p>
+            <p class="no-margin-vertical">Jumlah Data : <?php echo count($hutang); ?> </p>
+            <br>
+            <p class="no-margin-vertical">Data Tanggal <?php echo $dari; ?> s/d Tanggal <?php echo $sampai; ?> </p>
         </div>
         <div class="bb-1 mt-1 w-100"></div>
         <div class="bb-3 mt-2 w-100"></div>
@@ -113,7 +129,7 @@
     <div class="row mt-6">
         <div class="col-md-12">
             <div class="text-center">
-                <table class="table table-bordered">
+                <table class="table border1">
                     <thead class="thead-dark">
                     <tr>
                         <td>No.</td>

@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HutangController extends Controller
 {
@@ -119,8 +120,45 @@ class HutangController extends Controller
         $from = $request->input('dari');
         $until = $request->input('sampai');
 
+        //$dari = Carbon::createFromFormat('Y-m-d',$from)->format('d F Y');
+        //$sampai = Carbon::createFromFormat('Y-m-d',$until)->format('d F Y');
+
+        $hutang = Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
+            ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
+            ->where('hutang.user_id',$user->id)
+            ->where('hutang.created_at','>=',$from)
+            ->where('hutang.created_at','<=',$until)
+            ->get()
+            ->map(function ($item){
+                $waktu_hutang = Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at)->format('d F Y');
+                $item->tgl_hutang = $waktu_hutang;
+                return $item;
+            });
+            //->get();
+
+        if ($hutang){
+            $res['message'] = 'berhasil mendapatkan data hutang';
+            $res['status'] = "OK";
+            $res['http_status'] = 200;
+            $res['data'] = $hutang;
+        }else{
+            $res['message'] = 'gagal mendapatkan data hutang, coba lagi nanti';
+            $res['status'] = "Failed";
+            $res['http_status'] = 202;
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
+    public function printReport(Request $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $from = $request->input('dari');
+        $until = $request->input('sampai');
+
         $dari = Carbon::createFromFormat('Y-m-d',$from)->format('d F Y');
         $sampai = Carbon::createFromFormat('Y-m-d',$until)->format('d F Y');
+        $today = date('Y-m-d');
+        $now = Carbon::createFromFormat('Y-m-d',$today)->format('d F Y');
 
         $hutang = Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
             ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
@@ -128,8 +166,17 @@ class HutangController extends Controller
             ->where('hutang.created_at','>=',$from)
             ->where('hutang.created_at','<=',$until)
             ->get();
+        $data = array(
+            'hutang' => $hutang,
+            'user' => $user,
+            'dari' => $dari,
+            'sampai' => $sampai,
+            'now' => $now,
+        );
 
-        return view('laporan_hutang',compact('user','hutang','dari','sampai'));
+        $pdf = PDF::loadView('laporan_hutang',$data);
+
+        return $pdf->download('myreport.pdf');
     }
 
 

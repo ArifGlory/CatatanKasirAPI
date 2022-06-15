@@ -47,6 +47,7 @@ $router->get("/transaksi/chart", "TransaksiController@chartData");
 
 $router->get("/hutang/data", "HutangController@anyData");
 $router->get("/hutang/report", "HutangController@report");
+$router->get("/hutang/report/print", "HutangController@printReport");
 $router->post("/hutang/add", "HutangController@store");
 $router->post("/hutang/update", "HutangController@update");
 
