@@ -44,6 +44,8 @@ $router->get("/transaksi/history", "TransaksiController@history");
 $router->get("/transaksi/total-untung", "TransaksiController@totalUntung");
 $router->get("/transaksi/detail", "TransaksiController@detailTransaksi");
 $router->get("/transaksi/chart", "TransaksiController@chartData");
+$router->get("/transaksi/report", "TransaksiController@report");
+$router->get("/transaksi/report/print", "TransaksiController@printReport");
 
 $router->get("/hutang/data", "HutangController@anyData");
 $router->get("/hutang/report", "HutangController@report");

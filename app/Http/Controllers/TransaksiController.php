@@ -7,6 +7,7 @@ use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -165,6 +166,74 @@ class TransaksiController extends Controller
         }
 
         return response()->json($res, $res['http_status']);
+    }
+
+    public function report(Request  $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $from = $request->input('dari');
+        $until = $request->input('sampai');
+
+        $transaksi = Transaksi::leftJoin('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
+            ->select('transaksi.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
+            ->where('transaksi.user_id',$user->id)
+            ->where('transaksi.created_at','>=',$from)
+            ->where('transaksi.created_at','<=',$until)
+            ->get()
+            ->map(function ($item){
+                $waktu_transaksi = Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at)->format('d F Y');
+                $item->tgl_transaksi = $waktu_transaksi;
+                return $item;
+            });
+
+        if ($transaksi){
+            $res['message'] = 'Data transaksi berhasil didapatkan!';
+            $res['http_status'] = 200;
+            $res['status'] = "OK";
+            $res['data'] = $transaksi;
+        }else{
+            $res['message'] = 'Tidak ada data';
+            $res['http_status'] = 202;
+            $res['status'] = "Failed";
+            $res['data'] = [];
+
+        }
+
+        return response()->json($res, $res['http_status']);
+    }
+
+    public function printReport(Request  $request){
+        $user = User::where('token',$request->input('token'))->first();
+        $from = $request->input('dari');
+        $until = $request->input('sampai');
+
+        $dari = Carbon::createFromFormat('Y-m-d',$from)->format('d F Y');
+        $sampai = Carbon::createFromFormat('Y-m-d',$until)->format('d F Y');
+        $today = date('Y-m-d');
+        $now = Carbon::createFromFormat('Y-m-d',$today)->format('d F Y');
+
+        $transaksi = Transaksi::leftJoin('pelanggan', 'pelanggan.id', '=', 'transaksi.pelanggan_id')
+            ->select('transaksi.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
+            ->where('transaksi.user_id',$user->id)
+            ->where('transaksi.created_at','>=',$from)
+            ->where('transaksi.created_at','<=',$until)
+            ->get()
+            ->map(function ($item){
+                $waktu_transaksi = Carbon::createFromFormat('Y-m-d H:i:s',$item->created_at)->format('d F Y');
+                $item->tgl_transaksi = $waktu_transaksi;
+                return $item;
+            });
+
+        $data = array(
+            'untung' => $transaksi,
+            'user' => $user,
+            'dari' => $dari,
+            'sampai' => $sampai,
+            'now' => $now,
+        );
+
+        $pdf = PDF::loadView('laporan_untung',$data);
+
+        return $pdf->download('report_untung.pdf');
     }
 
 
