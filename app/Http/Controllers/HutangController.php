@@ -126,6 +126,7 @@ class HutangController extends Controller
         $hutang = Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
             ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
             ->where('hutang.user_id',$user->id)
+            ->where('hutang.hutang_type',"pelanggan")
             ->where('hutang.created_at','>=',$from)
             ->where('hutang.created_at','<=',$until)
             ->get()
@@ -163,6 +164,7 @@ class HutangController extends Controller
         $hutang = Hutang::leftJoin('pelanggan', 'pelanggan.id', '=', 'hutang.pelanggan_id')
             ->select('hutang.*','pelanggan.name as nama_pelanggan','pelanggan.id as id_pelanggan')
             ->where('hutang.user_id',$user->id)
+            ->where('hutang.hutang_type',"pelanggan")
             ->where('hutang.created_at','>=',$from)
             ->where('hutang.created_at','<=',$until)
             ->get();
