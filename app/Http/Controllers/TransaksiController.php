@@ -56,7 +56,16 @@ class TransaksiController extends Controller
                 'subtotal' => $val['subtotal'],
             );
             TransaksiDetail::create($data_detail);
+
+            //kurangi stok barang
+            $barang = Barang::where('id',$val['id_barang'])->first();
+            $new_stok = $barang->stok - $val['jumlah_beli'];
+            $update_barang = array(
+              'stok' => $new_stok
+            );
+            $barang->update($update_barang);
         }
+
         $data_update = array(
           'total_untung'  => $total_untung
         );
@@ -123,7 +132,10 @@ class TransaksiController extends Controller
 
     public function chartData(Request $request){
         $user = User::where('token',$request->input('token'))->first();
+        $current_month = date('m');
+
         $transaksi =  Transaksi::where('user_id',$user->id)
+            ->whereMonth('transaksi.created_at', '=', $current_month)
             //->groupBy('created_at')
             ->groupBy(DB::raw('Date(created_at)'))
             ->get(array(

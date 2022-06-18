@@ -113,7 +113,7 @@
         </div>
         <div class="col-md-12">
             <div class="text-center">
-                <h2 style="align-self: center;" class="my-center">Laporan Keuntungan </h2>
+                <h2 style="align-self: center;" class="my-center">Laporan Keuangan </h2>
             </div>
         </div>
         <div class="col-md-9">
@@ -143,6 +143,7 @@
                         <?php
                         $no = 1;
                         $total_untung = 0;
+                        $total_pendapatan = 0;
                         foreach ($untung as $val) {
                             $date = strtotime($val->created_at);
                             $nama_pelanggan = $val->nama_pelanggan;
@@ -150,6 +151,7 @@
                                 $nama_pelanggan = "Guest";
                             }
                             $total_untung+=$val->total_untung;
+                            $total_pendapatan+=$val->total_bayar;
                             ?>
                             <tr>
                                 <td> <?php echo $no++;?> </td>
@@ -168,6 +170,7 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <h5 style="margin-top: 1px;">Total Keuntungan : Rp. <?php echo number_format($total_untung,0,',','.') ?> </h5>
+            <h5 style="margin-top: 1px;">Total Pendapatan : Rp. <?php echo number_format($total_pendapatan,0,',','.') ?> </h5>
         </div>
     </div>
 </div>
